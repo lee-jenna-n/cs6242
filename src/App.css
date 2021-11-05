@@ -1,0 +1,28 @@
+.App {
+  background-color: #282c34;
+  min-height: 100vh;
+  color: white;
+  padding: 12px;
+}
+
+.App-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.Landing {
+  min-height: 100vh;
+  margin-top: 350px;
+}
+
+.Content {
+  padding-left: 200px;
+  padding-right: 200px;
+}
