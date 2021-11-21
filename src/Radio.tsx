@@ -1,40 +1,52 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react"
-import Header from "./Header"
 import InputForm from "./InputForm"
 
 const SAMPLE_SONGS = [
   {
-    title: "Solar Power",
-    artist: "Lorde",
-    album: "Solar Power",
+    songName: "Solar Power",
+    artistName: "Lorde",
+    albumName: "Solar Power",
   },
   {
-    title: "Easy On Me",
-    artist: "Adele",
-    album: "Easy On Me",
+    songName: "Easy On Me",
+    artistName: "Adele",
+    albumName: "Easy On Me",
   },
   {
-    title: "good 4 u",
-    artist: "Olivia Rodrigo",
-    album: "SOUR",
+    songName: "good 4 u",
+    artistName: "Olivia Rodrigo",
+    albumName: "SOUR",
   },
   {
-    title: "Heat Waves",
-    artist: "Glass Animals",
-    album: "Heat Waves",
+    songName: "Heat Waves",
+    artistName: "Glass Animals",
+    albumName: "Heat Waves",
   },
   {
-    title: "That Funny Feeling",
-    artist: "Bo Burnham",
-    album: "Inside (The Songs)",
+    songName: "That Funny Feeling",
+    artistName: "Bo Burnham",
+    albumName: "Inside (The Songs)",
   },
 ]
 
+const SONG_URL =
+  "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
+const FETCH_ARGS = {}
+
 function Radio() {
+  const [songs, setSongs] = React.useState(SAMPLE_SONGS)
+  useEffect(() => {
+    fetch(SONG_URL, FETCH_ARGS)
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setSongs(Object.values(data))
+      })
+  }, [])
   return (
     <Box>
-      <Header />
       <Box display="flex" ml={10}>
         <Box
           mt={20}
@@ -43,23 +55,25 @@ function Radio() {
           border="1px solid white"
           borderRadius="6px"
         >
-          <InputForm showAdvanced />
+          <InputForm />
         </Box>
         <Box className="Content">
           <Table variant="simple" size="lg" colorScheme="whiteAlpha">
             <Thead>
-              <Th />
-              <Th>Title</Th>
-              <Th>Artist</Th>
-              <Th>Album</Th>
+              <Tr>
+                <Th />
+                <Th>Title</Th>
+                <Th>Artist</Th>
+                <Th>Album</Th>
+              </Tr>
             </Thead>
             <Tbody>
-              {SAMPLE_SONGS.map((song, index) => (
-                <Tr>
+              {songs.map((song, index) => (
+                <Tr key={song.songName}>
                   <Td>{index + 1}.</Td>
-                  <Td>{song.title}</Td>
-                  <Td>{song.artist}</Td>
-                  <Td>{song.album}</Td>
+                  <Td>{song.songName}</Td>
+                  <Td>{song.artistName}</Td>
+                  <Td>{song.albumName}</Td>
                 </Tr>
               ))}
             </Tbody>

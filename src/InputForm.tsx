@@ -1,5 +1,4 @@
-import React from "react"
-import { useHistory } from "react-router-dom"
+import React, { ChangeEvent } from "react"
 import {
   Box,
   Button,
@@ -9,46 +8,33 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react"
-import {
-  ACTIVITIES,
-  useActivity,
-  ActivityProvider,
-  ActivitiesType,
-} from "./activityContext"
 
-function InputForm({
-  activity,
-  showAdvanced,
-  size = "md",
-}: {
-  activity?: ActivitiesType
-  showAdvanced?: boolean
-  size?: "md" | "lg"
-}) {
-  const history = useHistory()
-  //   const {
-  //     state: { activity },
-  //     setActivity,
-  //   } = useActivity()
-  const handleClick = () => {
-    history.push("/radio")
-    // setActivity("running")
+export type ActivitiesType = "cleaning" | "driving" | "running" | "working"
+
+export const ACTIVITIES = [
+  { activity: "cleaning", displayName: "Cleaning" },
+  { activity: "driving", displayName: "Driving" },
+  { activity: "running", displayName: "Running" },
+  { activity: "working", displayName: "Working" },
+]
+
+function InputForm() {
+  const [activity, setActivity] = React.useState<ActivitiesType | undefined>(undefined)
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setActivity(event.target.value as ActivitiesType)
   }
   return (
-    <ActivityProvider>
-      <Box display="flex" flexDirection={showAdvanced ? "column" : "row"}>
+      <Box display="flex" flexDirection="column">
         <Box display="flex" flexDirection="column">
           <Select
             placeholder="What are you doing?"
-            size={size}
+            onChange={handleChange}
             value={activity}
           >
             {ACTIVITIES.map(activity => (
-              <option value={activity.activity}>{activity.displayName}</option>
+              <option key={activity.activity} value={activity.activity}>{activity.displayName}</option>
             ))}
           </Select>
-          {showAdvanced && (
-            <>
               <Box my={6}>
                 <label style={{ display: "flex", alignItems: "center" }}>
                   <Text fontSize="md" mr={4} whiteSpace="nowrap">
@@ -64,16 +50,13 @@ function InputForm({
                   <Text whitespace="nowrap">Include explicit</Text>
                 </Checkbox>
               </Box>
-            </>
-          )}
         </Box>
-        <Box mt={showAdvanced ? 12 : 0} ml={showAdvanced ? 0 : 4}>
-          <Button onClick={handleClick} colorScheme="blue" size={size}>
+        <Box mt={12}>
+          <Button onClick={() => {}} colorScheme="blue" >
             Get music
           </Button>
         </Box>
       </Box>
-    </ActivityProvider>
   )
 }
 
