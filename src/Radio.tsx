@@ -17,12 +17,19 @@ type SongResponseType = {
   releaseDate: string
 }
 
+export type ActivityType = "cleaning" | "driving" | "running" | "working"
+
 const SONG_URL =
   "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
 const FETCH_ARGS = {}
 
 function Radio() {
   const [songs, setSongs] = React.useState<SongType[] | undefined>(undefined)
+  const [activity, setActivity] = React.useState<ActivityType | undefined>(
+    undefined
+  )
+  const [age, setAge] = React.useState<number | undefined>(undefined)
+  const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
   useEffect(() => {
     fetch(SONG_URL, FETCH_ARGS)
       .then(response => {
@@ -47,7 +54,14 @@ function Radio() {
           border="1px solid white"
           borderRadius="6px"
         >
-          <InputForm />
+          <InputForm
+            activity={activity}
+            setActivity={setActivity}
+            age={age}
+            setAge={setAge}
+            includeExplicit={includeExplicit}
+            setIncludeExplicit={setIncludeExplicit}
+          />
         </Box>
         <Box className="Content">
           <Table variant="simple" size="lg" colorScheme="whiteAlpha">
