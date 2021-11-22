@@ -34,11 +34,12 @@ function InputForm({ setSongs }: Props) {
   const [age, setAge] = React.useState<number | undefined>(undefined)
   const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
 
-  useEffect(() => {
+  const getMusic = () => {
     fetchSongs()
-  })
+  }
 
   const fetchSongs = () => {
+    //TODO: pass in the params
     type SongResponseType = {
       songName: string
       artistName: string
@@ -114,7 +115,7 @@ function InputForm({ setSongs }: Props) {
         </Box>
       </Box>
       <Box mt={12}>
-        <Button onClick={() => {}} colorScheme="blue">
+        <Button onClick={getMusic} colorScheme="blue">
           Get music
         </Button>
       </Box>

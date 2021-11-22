@@ -25,6 +25,7 @@ function Radio() {
           <InputForm setSongs={setSongs} />
         </Box>
         <Box className="Content">
+          {/* {TODO: add loading state if no songs} */}
           <Table variant="simple" size="lg" colorScheme="whiteAlpha">
             <Thead>
               <Tr>
