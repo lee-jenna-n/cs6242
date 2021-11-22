@@ -1,49 +1,17 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io"
 import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react"
 import InputForm from "./InputForm"
 
-type SongType = {
+export type SongType = {
   songName: string
   artistName: string[]
   albumName: string
   releaseDate: string
 }
 
-type SongResponseType = {
-  songName: string
-  artistName: string
-  albumName: string
-  releaseDate: string
-}
-
-export type ActivityType = "cleaning" | "driving" | "running" | "working"
-
-const SONG_URL =
-  "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
-const FETCH_ARGS = {}
-
 function Radio() {
   const [songs, setSongs] = React.useState<SongType[] | undefined>(undefined)
-  const [activity, setActivity] = React.useState<ActivityType | undefined>(
-    undefined
-  )
-  const [age, setAge] = React.useState<number | undefined>(undefined)
-  const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
-  useEffect(() => {
-    fetch(SONG_URL, FETCH_ARGS)
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        const songData: SongResponseType[] = Object.values(data)
-        const formattedSongData: SongType[] = songData.map(s => ({
-          ...s,
-          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
-        }))
-        setSongs(formattedSongData)
-      })
-  }, [])
   return (
     <Box>
       <Box display="flex" ml={10}>
@@ -54,14 +22,7 @@ function Radio() {
           border="1px solid white"
           borderRadius="6px"
         >
-          <InputForm
-            activity={activity}
-            setActivity={setActivity}
-            age={age}
-            setAge={setAge}
-            includeExplicit={includeExplicit}
-            setIncludeExplicit={setIncludeExplicit}
-          />
+          <InputForm setSongs={setSongs} />
         </Box>
         <Box className="Content">
           <Table variant="simple" size="lg" colorScheme="whiteAlpha">

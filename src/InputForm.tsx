@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction } from "react"
+import React, { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react"
 import {
   Box,
   Button,
@@ -8,7 +8,9 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react"
-import { ActivityType } from "./Radio"
+import { SongType } from "./Radio"
+
+export type ActivityType = "cleaning" | "driving" | "running" | "working"
 
 export const ACTIVITIES = [
   { activity: "cleaning", displayName: "Cleaning" },
@@ -17,23 +19,47 @@ export const ACTIVITIES = [
   { activity: "working", displayName: "Working" },
 ]
 
+const SONG_URL =
+  "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
+const FETCH_ARGS = {}
+
 interface Props {
-  activity: ActivityType | undefined
-  setActivity: Dispatch<SetStateAction<ActivityType | undefined>>
-  age: number | undefined
-  setAge: Dispatch<SetStateAction<number | undefined>>
-  includeExplicit: boolean
-  setIncludeExplicit: Dispatch<SetStateAction<boolean>>
+  setSongs: Dispatch<SetStateAction<SongType[] | undefined>>
 }
 
-function InputForm({
-  activity,
-  setActivity,
-  age,
-  setAge,
-  includeExplicit,
-  setIncludeExplicit,
-}: Props) {
+function InputForm({ setSongs }: Props) {
+  const [activity, setActivity] = React.useState<ActivityType | undefined>(
+    undefined
+  )
+  const [age, setAge] = React.useState<number | undefined>(undefined)
+  const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
+
+  useEffect(() => {
+    fetchSongs()
+  })
+
+  const fetchSongs = () => {
+    type SongResponseType = {
+      songName: string
+      artistName: string
+      albumName: string
+      releaseDate: string
+    }
+
+    fetch(SONG_URL, FETCH_ARGS)
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        const songData: SongResponseType[] = Object.values(data)
+        const formattedSongData: SongType[] = songData.map(s => ({
+          ...s,
+          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
+        }))
+        setSongs(formattedSongData)
+      })
+  }
+
   const handleActivityChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setActivity(event.target.value as ActivityType)
   }
