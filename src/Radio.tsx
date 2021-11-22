@@ -1,48 +1,40 @@
 import React, { useEffect } from "react"
+import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io"
 import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react"
 import InputForm from "./InputForm"
 
-const SAMPLE_SONGS = [
-  {
-    songName: "Solar Power",
-    artistName: "Lorde",
-    albumName: "Solar Power",
-  },
-  {
-    songName: "Easy On Me",
-    artistName: "Adele",
-    albumName: "Easy On Me",
-  },
-  {
-    songName: "good 4 u",
-    artistName: "Olivia Rodrigo",
-    albumName: "SOUR",
-  },
-  {
-    songName: "Heat Waves",
-    artistName: "Glass Animals",
-    albumName: "Heat Waves",
-  },
-  {
-    songName: "That Funny Feeling",
-    artistName: "Bo Burnham",
-    albumName: "Inside (The Songs)",
-  },
-]
+type SongType = {
+  songName: string
+  artistName: string[]
+  albumName: string
+  releaseDate: string
+}
+
+type SongResponseType = {
+  songName: string
+  artistName: string
+  albumName: string
+  releaseDate: string
+}
 
 const SONG_URL =
   "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
 const FETCH_ARGS = {}
 
 function Radio() {
-  const [songs, setSongs] = React.useState(SAMPLE_SONGS)
+  const [songs, setSongs] = React.useState<SongType[] | undefined>(undefined)
   useEffect(() => {
     fetch(SONG_URL, FETCH_ARGS)
       .then(response => {
         return response.json()
       })
       .then(data => {
-        setSongs(Object.values(data))
+        const songData: SongResponseType[] = Object.values(data)
+        const formattedSongData: SongType[] = songData.map(s => ({
+          ...s,
+          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
+        }))
+        setSongs(formattedSongData)
       })
   }, [])
   return (
@@ -65,17 +57,24 @@ function Radio() {
                 <Th>Title</Th>
                 <Th>Artist</Th>
                 <Th>Album</Th>
+                <Th>Rate</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {songs.map((song, index) => (
-                <Tr key={song.songName}>
-                  <Td>{index + 1}.</Td>
-                  <Td>{song.songName}</Td>
-                  <Td>{song.artistName}</Td>
-                  <Td>{song.albumName}</Td>
-                </Tr>
-              ))}
+              {songs &&
+                songs.map((song, index) => (
+                  <Tr key={song.songName}>
+                    <Td>{index + 1}.</Td>
+                    <Td>{song.songName}</Td>
+                    <Td>{song.artistName}</Td>
+                    <Td>{song.albumName}</Td>
+                    <Td>
+                      <Box display="flex">
+                        <IoIosThumbsUp /> <IoIosThumbsDown />
+                      </Box>
+                    </Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
         </Box>
