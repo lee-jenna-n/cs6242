@@ -1,17 +1,53 @@
 import React from "react"
-import { IoIosThumbsUp, IoIosThumbsDown } from "react-icons/io"
-import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react"
+import {
+  BsHandThumbsDownFill,
+  BsHandThumbsUpFill,
+  BsHandThumbsDown,
+  BsHandThumbsUp,
+} from "react-icons/bs"
+import {
+  Box,
+  IconButton,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+} from "@chakra-ui/react"
 import InputForm from "./InputForm"
 
 export type SongType = {
   songName: string
   artistName: string[]
   albumName: string
-  releaseDate: string
+  releaseDate?: string
+  rating?: "liked" | "unliked" | null
 }
 
 function Radio() {
   const [songs, setSongs] = React.useState<SongType[] | undefined>(undefined)
+
+  const handleRatingClick = (
+    rating: "liked" | "unliked",
+    song: SongType,
+    songIndex: number
+  ) => {
+    if (!songs) {
+      return
+    }
+
+    const songsCopy: SongType[] = [...songs]
+    if (song.rating === rating) {
+      songsCopy[songIndex].rating = null
+    } else {
+      songsCopy[songIndex].rating = rating
+    }
+
+    setSongs(songsCopy)
+  }
+
   return (
     <Box>
       <Box display="flex" ml={10}>
@@ -25,34 +61,66 @@ function Radio() {
           <InputForm setSongs={setSongs} />
         </Box>
         <Box className="Content">
-          {/* {TODO: add loading state if no songs} */}
-          <Table variant="simple" size="lg" colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th />
-                <Th>Title</Th>
-                <Th>Artist</Th>
-                <Th>Album</Th>
-                <Th>Rate</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {songs &&
-                songs.map((song, index) => (
-                  <Tr key={song.songName}>
-                    <Td>{index + 1}.</Td>
-                    <Td>{song.songName}</Td>
-                    <Td>{song.artistName}</Td>
-                    <Td>{song.albumName}</Td>
-                    <Td>
-                      <Box display="flex">
-                        <IoIosThumbsUp /> <IoIosThumbsDown />
-                      </Box>
-                    </Td>
-                  </Tr>
-                ))}
-            </Tbody>
-          </Table>
+          {!songs?.length ? (
+            <Text mt={20} fontSize="xl">
+              Help us craft your perfect playlist by sharing some info!
+            </Text>
+          ) : (
+            <Table variant="simple" size="lg" colorScheme="whiteAlpha">
+              <Thead>
+                <Tr>
+                  <Th />
+                  <Th>Title</Th>
+                  <Th>Artist</Th>
+                  <Th>Album</Th>
+                  <Th>Rate</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {songs &&
+                  songs.map((song, index) => (
+                    <Tr key={song.songName}>
+                      <Td>{index + 1}.</Td>
+                      <Td>{song.songName}</Td>
+                      <Td>{song.artistName}</Td>
+                      <Td>{song.albumName}</Td>
+                      <Td>
+                        <Box display="flex">
+                          <IconButton
+                            variant="unstyled"
+                            aria-label="Unlike"
+                            icon={
+                              song.rating === "unliked" ? (
+                                <BsHandThumbsDownFill />
+                              ) : (
+                                <BsHandThumbsDown />
+                              )
+                            }
+                            onClick={() =>
+                              handleRatingClick("unliked", song, index)
+                            }
+                          />
+                          <IconButton
+                            variant="unstyled"
+                            aria-label="Like"
+                            icon={
+                              song.rating === "liked" ? (
+                                <BsHandThumbsUpFill />
+                              ) : (
+                                <BsHandThumbsUp />
+                              )
+                            }
+                            onClick={() =>
+                              handleRatingClick("liked", song, index)
+                            }
+                          />
+                        </Box>
+                      </Td>
+                    </Tr>
+                  ))}
+              </Tbody>
+            </Table>
+          )}
         </Box>
       </Box>
     </Box>
