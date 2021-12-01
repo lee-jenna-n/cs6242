@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { SongType } from "./Radio"
+import { getSampleSongs } from "./sampleSongs.js"
 
 export type ActivityType =
   | "driving"
@@ -68,18 +69,21 @@ function InputForm({ setSongs }: Props) {
         .join("&")
     }
 
-    fetch(SONG_URL + "?" + getQueryString())
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        const songData: SongResponseType[] = Object.values(data)
-        const formattedSongData: SongType[] = songData.map(s => ({
-          ...s,
-          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
-        }))
-        setSongs(formattedSongData)
-      })
+    setSongs(getSampleSongs())
+
+    // TODO: uncomment when backend is updated
+    // fetch(SONG_URL + "?" + getQueryString())
+    //   .then(response => {
+    //     return response.json()
+    //   })
+    //   .then(data => {
+    //     const songData: SongResponseType[] = Object.values(data)
+    //     const formattedSongData: SongType[] = songData.map(s => ({
+    //       ...s,
+    //       artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
+    //     }))
+    //     setSongs(formattedSongData)
+    //   })
   }
 
   const handleActivityChange = (event: ChangeEvent<HTMLSelectElement>) => {

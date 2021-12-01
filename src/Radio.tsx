@@ -51,14 +51,10 @@ function Radio() {
   return (
     <Box>
       <Box display="flex" ml={10}>
-        <Box
-          mt={20}
-          width="280px"
-          p={6}
-          border="1px solid white"
-          borderRadius="6px"
-        >
-          <InputForm setSongs={setSongs} />
+        <Box mt={20} width="280px">
+          <Box p={6} border="1px solid white" borderRadius="6px">
+            <InputForm setSongs={setSongs} />
+          </Box>
         </Box>
         <Box className="Content">
           {!songs?.length ? (
@@ -82,7 +78,7 @@ function Radio() {
                     <Tr key={song.songName}>
                       <Td>{index + 1}.</Td>
                       <Td>{song.songName}</Td>
-                      <Td>{song.artistName}</Td>
+                      <Td>{song.artistName.join(", ")}</Td>
                       <Td>{song.albumName}</Td>
                       <Td>
                         <Box display="flex">
