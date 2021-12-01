@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react"
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react"
 import {
   Box,
   Button,
@@ -10,27 +10,32 @@ import {
 } from "@chakra-ui/react"
 import { SongType } from "./Radio"
 
-export type ActivityType = "cleaning" | "driving" | "running" | "working"
+export type ActivityType =
+  | "driving"
+  | "cooking"
+  | "studying"
+  | "workingOut"
+  | "cleaning"
+  | "beingCreative"
 
 export const ACTIVITIES = [
-  { activity: "cleaning", displayName: "Cleaning" },
   { activity: "driving", displayName: "Driving" },
-  { activity: "running", displayName: "Running" },
-  { activity: "working", displayName: "Working" },
+  { activity: "cooking", displayName: "Cooking" },
+  { activity: "studying", displayName: "Studying" },
+  { activity: "workingOut", displayName: "Working out" },
+  { activity: "cleaning", displayName: "Cleaning" },
+  { activity: "beingCreative", displayName: "Being creative" },
 ]
 
 const SONG_URL =
   "https://cse6242-songlists-api.herokuapp.com/song-recommendations/api/v1.0/getsongs"
-const FETCH_ARGS = {}
 
 interface Props {
   setSongs: Dispatch<SetStateAction<SongType[] | undefined>>
 }
 
 function InputForm({ setSongs }: Props) {
-  const [activity, setActivity] = React.useState<ActivityType | undefined>(
-    undefined
-  )
+  const [activity, setActivity] = React.useState<ActivityType>("driving")
   const [age, setAge] = React.useState<number | undefined>(undefined)
   const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
 
@@ -39,7 +44,6 @@ function InputForm({ setSongs }: Props) {
   }
 
   const fetchSongs = () => {
-    //TODO: pass in the params
     type SongResponseType = {
       songName: string
       artistName: string
@@ -47,7 +51,24 @@ function InputForm({ setSongs }: Props) {
       releaseDate: string
     }
 
-    fetch(SONG_URL, FETCH_ARGS)
+    const getQueryString = () => {
+      const queries: { [key: string]: any } = {
+        numSongs: 10,
+        dob_year: age ? new Date().getFullYear() - age : null,
+        explicitYN: includeExplicit ? "Y" : "N",
+        activity,
+      }
+      return Object.keys(queries)
+        .reduce((result: any, key: any) => {
+          return [
+            ...result,
+            `${encodeURIComponent(key)}=${encodeURIComponent(queries[key])}`,
+          ]
+        }, [])
+        .join("&")
+    }
+
+    fetch(SONG_URL + "?" + getQueryString())
       .then(response => {
         return response.json()
       })
@@ -79,17 +100,18 @@ function InputForm({ setSongs }: Props) {
   return (
     <Box display="flex" flexDirection="column">
       <Box display="flex" flexDirection="column">
-        <Select
-          placeholder="What are you doing?"
-          onChange={handleActivityChange}
-          value={activity}
-        >
-          {ACTIVITIES.map(activity => (
-            <option key={activity.activity} value={activity.activity}>
-              {activity.displayName}
-            </option>
-          ))}
-        </Select>
+        <label>
+          <Text fontSize="md" whiteSpace="nowrap">
+            What are you doing?*
+          </Text>
+          <Select onChange={handleActivityChange} value={activity}>
+            {ACTIVITIES.map(activity => (
+              <option key={activity.activity} value={activity.activity}>
+                {activity.displayName}
+              </option>
+            ))}
+          </Select>
+        </label>
         <Box my={6}>
           <label style={{ display: "flex", alignItems: "center" }}>
             <Text fontSize="md" mr={4} whiteSpace="nowrap">
