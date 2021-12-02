@@ -23,14 +23,14 @@ export type SongType = {
   artistName: string[]
   albumName: string
   releaseDate?: string
-  rating?: "liked" | "unliked" | null
+  rating?: "liked" | "disliked" | null
 }
 
 function Radio() {
   const [songs, setSongs] = React.useState<SongType[] | undefined>(undefined)
 
   const handleRatingClick = (
-    rating: "liked" | "unliked",
+    rating: "liked" | "disliked",
     song: SongType,
     songIndex: number
   ) => {
@@ -86,14 +86,14 @@ function Radio() {
                             variant="unstyled"
                             aria-label="Unlike"
                             icon={
-                              song.rating === "unliked" ? (
+                              song.rating === "disliked" ? (
                                 <BsHandThumbsDownFill />
                               ) : (
                                 <BsHandThumbsDown />
                               )
                             }
                             onClick={() =>
-                              handleRatingClick("unliked", song, index)
+                              handleRatingClick("disliked", song, index)
                             }
                           />
                           <IconButton
