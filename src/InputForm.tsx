@@ -69,21 +69,20 @@ function InputForm({ setSongs }: Props) {
         .join("&")
     }
 
-    setSongs(getSampleSongs())
+    // setSongs(getSampleSongs())
 
-    // TODO: uncomment when backend is updated
-    // fetch(SONG_URL + "?" + getQueryString())
-    //   .then(response => {
-    //     return response.json()
-    //   })
-    //   .then(data => {
-    //     const songData: SongResponseType[] = Object.values(data)
-    //     const formattedSongData: SongType[] = songData.map(s => ({
-    //       ...s,
-    //       artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
-    //     }))
-    //     setSongs(formattedSongData)
-    //   })
+    fetch(SONG_URL + "?" + getQueryString())
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        const songData: SongResponseType[] = Object.values(data)
+        const formattedSongData: SongType[] = songData.map(s => ({
+          ...s,
+          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
+        }))
+        setSongs(formattedSongData)
+      })
   }
 
   const handleActivityChange = (event: ChangeEvent<HTMLSelectElement>) => {
