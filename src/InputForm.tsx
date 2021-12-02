@@ -55,9 +55,9 @@ function InputForm({ setSongs }: Props) {
     const getQueryString = () => {
       const queries: { [key: string]: any } = {
         numSongs: 10,
-        dob_year: age ? new Date().getFullYear() - age : null,
         explicitYN: includeExplicit ? "Y" : "N",
         activity,
+        ...(age && { dob_year: new Date().getFullYear() - age }),
       }
       return Object.keys(queries)
         .reduce((result: any, key: any) => {
