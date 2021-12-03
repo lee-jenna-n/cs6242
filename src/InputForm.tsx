@@ -94,7 +94,7 @@ function InputForm({ setSongs }: Props) {
     setIncludeExplicit(event.target.checked)
   }
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" minW="210px">
       <Box display="flex" flexDirection="column">
         <label>
           <Text fontSize="md" whiteSpace="nowrap">
