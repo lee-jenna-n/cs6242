@@ -37,7 +37,7 @@ interface Props {
 
 function InputForm({ setSongs }: Props) {
   const [activity, setActivity] = React.useState<ActivityType>("driving")
-  const [age, setAge] = React.useState<number | undefined>(undefined)
+  const [age, setAge] = React.useState<string>("20")
   const [includeExplicit, setIncludeExplicit] = React.useState<boolean>(false)
 
   const getMusic = () => {
@@ -57,7 +57,7 @@ function InputForm({ setSongs }: Props) {
         numSongs: 10,
         explicitYN: includeExplicit ? "Y" : "N",
         activity,
-        ...(age && { dob_year: new Date().getFullYear() - age }),
+        dob_year: new Date().getFullYear() - parseInt(age),
       }
       return Object.keys(queries)
         .reduce((result: any, key: any) => {
@@ -88,13 +88,6 @@ function InputForm({ setSongs }: Props) {
   const handleActivityChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setActivity(event.target.value as ActivityType)
   }
-  const handleAgeChange = (valueAsString: string, valueAsNumber: number) => {
-    if (isNaN(valueAsNumber)) {
-      setAge(undefined)
-    } else {
-      setAge(valueAsNumber)
-    }
-  }
   const handleIncludeExplicitChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -124,7 +117,9 @@ function InputForm({ setSongs }: Props) {
               size="sm"
               display="inline"
               value={age}
-              onChange={handleAgeChange}
+              min={0}
+              max={150}
+              onChange={setAge}
             >
               <NumberInputField />
             </NumberInput>
@@ -140,7 +135,7 @@ function InputForm({ setSongs }: Props) {
         </Box>
       </Box>
       <Box mt={12}>
-        <Button onClick={getMusic} colorScheme="blue">
+        <Button onClick={getMusic} colorScheme="blue" disabled={!age}>
           Get music
         </Button>
       </Box>
