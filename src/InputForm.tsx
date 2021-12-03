@@ -15,17 +15,17 @@ export type ActivityType =
   | "driving"
   | "cooking"
   | "studying"
-  | "workingOut"
+  | "working out"
   | "cleaning"
-  | "beingCreative"
+  | "being creative"
 
 export const ACTIVITIES = [
   { activity: "driving", displayName: "Driving" },
   { activity: "cooking", displayName: "Cooking" },
   { activity: "studying", displayName: "Studying" },
-  { activity: "workingOut", displayName: "Working out" },
+  { activity: "working out", displayName: "Working out" },
   { activity: "cleaning", displayName: "Cleaning" },
-  { activity: "beingCreative", displayName: "Being creative" },
+  { activity: "being creative", displayName: "Being creative" },
 ]
 
 const SONG_URL =
