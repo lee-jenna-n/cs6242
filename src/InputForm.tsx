@@ -79,7 +79,7 @@ function InputForm({ setSongs }: Props) {
         const songData: SongResponseType[] = Object.values(data)
         const formattedSongData: SongType[] = songData.map(s => ({
           ...s,
-          artistName: s.artistName.replace(/\['|'\]/g, "").split("','"),
+          artistName: s.artistName.replace(/\['|'\]/g, "").split("', '"),
         }))
         setSongs(formattedSongData)
       })
